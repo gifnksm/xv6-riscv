@@ -42,7 +42,7 @@ fn sieve(mut rx: PipeReader) -> ! {
             let Some(i) = read_number(&mut rx) else {
                 break;
             };
-            if i % n == 0 {
+            if i.is_multiple_of(n) {
                 continue;
             }
             tx.write_all(&i.to_ne_bytes())

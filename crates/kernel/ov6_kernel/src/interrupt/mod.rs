@@ -80,10 +80,10 @@ impl Drop for Guard {
         assert_eq!(self.cpuid, cpuid);
         assert!(!is_enabled());
         let state = &CPU_STATE[cpuid];
-        if let Some(int_enabled) = state.pop_disabled() {
-            if int_enabled {
-                enable();
-            }
+        if let Some(int_enabled) = state.pop_disabled()
+            && int_enabled
+        {
+            enable();
         }
     }
 }

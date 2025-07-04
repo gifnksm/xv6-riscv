@@ -324,7 +324,7 @@ impl<const READ_ONLY: bool> Tx<'_, READ_ONLY> {
         let _ = self;
     }
 
-    pub(super) fn get_block(&self, dev: DeviceNo, bn: BlockNo) -> TxBlockRef<READ_ONLY> {
+    pub(super) fn get_block(&self, dev: DeviceNo, bn: BlockNo) -> TxBlockRef<'_, READ_ONLY> {
         TxBlockRef {
             log: self.log,
             block: block_io::get(dev, bn.value() as usize),
@@ -332,7 +332,7 @@ impl<const READ_ONLY: bool> Tx<'_, READ_ONLY> {
     }
 
     #[expect(clippy::unused_self)]
-    pub(super) fn to_writable(&self) -> Option<NestedTx<false>> {
+    pub(super) fn to_writable(&self) -> Option<NestedTx<'_, false>> {
         if READ_ONLY {
             None
         } else {
@@ -363,7 +363,7 @@ pub struct TxBlockRef<'a, const READ_ONLY: bool> {
 }
 
 impl<const READ_ONLY: bool> TxBlockRef<'_, READ_ONLY> {
-    pub(super) fn lock(&mut self) -> TxBlockGuard<false, READ_ONLY> {
+    pub(super) fn lock(&mut self) -> TxBlockGuard<'_, false, READ_ONLY> {
         TxBlockGuard {
             log: self.log,
             guard: Some(self.block.lock()),
@@ -378,14 +378,12 @@ pub(super) struct TxBlockGuard<'a, const VALID: bool, const READ_ONLY: bool> {
 
 impl<const VALID: bool, const READ_ONLY: bool> Drop for TxBlockGuard<'_, VALID, READ_ONLY> {
     fn drop(&mut self) {
-        if let Some(guard) = self.guard.take() {
-            if guard.is_dirty() {
-                if let Ok(mut guard) = guard.try_validate() {
-                    if let Some(log) = self.log {
-                        log.write(&mut guard);
-                    }
-                }
-            }
+        if let Some(guard) = self.guard.take()
+            && guard.is_dirty()
+            && let Ok(mut guard) = guard.try_validate()
+            && let Some(log) = self.log
+        {
+            log.write(&mut guard);
         }
     }
 }

@@ -50,7 +50,7 @@ where
     ///
     /// When returned value is dropped, the key is promoted to the most recently
     /// used (MRU) position.
-    pub fn get(&self, key: K) -> Option<LruValue<LruMutex, K, V, A>>
+    pub fn get(&self, key: K) -> Option<LruValue<'_, LruMutex, K, V, A>>
     where
         K: PartialEq + Clone,
     {

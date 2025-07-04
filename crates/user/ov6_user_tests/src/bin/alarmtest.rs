@@ -97,7 +97,7 @@ fn test0() {
 
 #[inline(never)]
 fn foo(i: usize, j: &mut usize) {
-    if i % 2_500_000 == 0 {
+    if i.is_multiple_of(2_500_000) {
         eprint!(".");
     }
     *j += 1;

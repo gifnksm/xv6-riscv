@@ -361,8 +361,8 @@ impl<T> UserSlice<T> {
     #[must_use]
     #[track_caller]
     pub const fn cast<U>(&self) -> UserSlice<U> {
-        assert!(self.addr() % align_of::<U>() == 0);
-        assert!(self.size().unwrap() % size_of::<U>() == 0);
+        assert!(self.addr().is_multiple_of(align_of::<U>()));
+        assert!(self.size().unwrap().is_multiple_of(size_of::<U>()));
 
         UserSlice {
             addr: self.addr,
@@ -496,8 +496,8 @@ impl<T> UserMutSlice<T> {
     #[must_use]
     #[track_caller]
     pub const fn cast_mut<U>(&mut self) -> UserMutSlice<U> {
-        assert!(self.addr() % align_of::<U>() == 0);
-        assert!(self.size().unwrap() % size_of::<U>() == 0);
+        assert!(self.addr().is_multiple_of(align_of::<U>()));
+        assert!(self.size().unwrap().is_multiple_of(size_of::<U>()));
 
         UserMutSlice {
             addr: self.addr,

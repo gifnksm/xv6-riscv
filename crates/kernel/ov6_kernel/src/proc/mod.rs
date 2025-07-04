@@ -157,16 +157,16 @@ impl ProcShared {
     }
 
     #[track_caller]
-    pub fn lock(&self) -> SpinLockGuard<ProcSharedData> {
+    pub fn lock(&self) -> SpinLockGuard<'_, ProcSharedData> {
         self.0.lock()
     }
 
     #[track_caller]
-    pub fn try_lock(&self) -> Result<SpinLockGuard<ProcSharedData>, TryLockError> {
+    pub fn try_lock(&self) -> Result<SpinLockGuard<'_, ProcSharedData>, TryLockError> {
         self.0.try_lock()
     }
 
-    unsafe fn remember_locked(&self) -> SpinLockGuard<ProcSharedData> {
+    unsafe fn remember_locked(&self) -> SpinLockGuard<'_, ProcSharedData> {
         unsafe { self.0.remember_locked() }
     }
 }
@@ -401,7 +401,7 @@ impl Proc {
     }
 
     #[track_caller]
-    fn init_private(&self, data: ProcPrivateData) -> ProcPrivateDataGuard {
+    fn init_private(&self, data: ProcPrivateData) -> ProcPrivateDataGuard<'_> {
         let private = self.borrow_private_raw();
         assert!(private.is_none());
         *private = Some(data);
@@ -414,7 +414,7 @@ impl Proc {
     }
 
     #[track_caller]
-    pub fn borrow_private(&self) -> Option<ProcPrivateDataGuard> {
+    pub fn borrow_private(&self) -> Option<ProcPrivateDataGuard<'_>> {
         let Some(private) = self.borrow_private_raw() else {
             // process already exited
             self.private_borrowed.store(false, Ordering::Release);

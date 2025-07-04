@@ -94,7 +94,7 @@ impl<const PAGE_SIZE: usize> PageFrameAllocator<PAGE_SIZE> {
     /// The pointer must be page-aligned to be considered valid.
     #[must_use]
     pub fn is_allocated_pointer(&self, ptr: NonNull<u8>) -> bool {
-        ptr.addr().get() % PAGE_SIZE == 0 && self.heap.contains(&ptr)
+        ptr.addr().get().is_multiple_of(PAGE_SIZE) && self.heap.contains(&ptr)
     }
 
     /// Allocates a page of physical memory.

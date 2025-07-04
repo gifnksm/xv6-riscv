@@ -40,7 +40,7 @@ impl<T> SpinLock<T> {
     ///
     /// Loops (spins) until the lock is acquired.
     #[track_caller]
-    pub fn try_lock(&self) -> Result<SpinLockGuard<T>, TryLockError> {
+    pub fn try_lock(&self) -> Result<SpinLockGuard<'_, T>, TryLockError> {
         // disable interrupts to avoid deadlock.
         let int_guard = interrupt::push_disabled();
 
@@ -68,7 +68,7 @@ impl<T> SpinLock<T> {
     ///
     /// Loops (spins) until the lock is acquired.
     #[track_caller]
-    pub fn lock(&self) -> SpinLockGuard<T> {
+    pub fn lock(&self) -> SpinLockGuard<'_, T> {
         // disable interrupts to avoid deadlock.
         let int_guard = interrupt::push_disabled();
 
@@ -90,7 +90,7 @@ impl<T> SpinLock<T> {
         SpinLockGuard { lock: self }
     }
 
-    pub unsafe fn remember_locked(&self) -> SpinLockGuard<T> {
+    pub unsafe fn remember_locked(&self) -> SpinLockGuard<'_, T> {
         assert!(self.holding());
         SpinLockGuard { lock: self }
     }

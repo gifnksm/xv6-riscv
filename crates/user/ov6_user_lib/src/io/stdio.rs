@@ -31,10 +31,10 @@ pub fn _eprint(args: fmt::Arguments) {
 
 pub(crate) fn cleanup() {
     let stdout = STDOUT.try_get();
-    if let Ok(stdout) = stdout {
-        if let Some(mut lock) = stdout.try_lock() {
-            *lock = LineWriter::with_capacity(0, StdoutRaw {});
-        }
+    if let Ok(stdout) = stdout
+        && let Some(mut lock) = stdout.try_lock()
+    {
+        *lock = LineWriter::with_capacity(0, StdoutRaw {});
     }
 }
 

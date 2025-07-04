@@ -8,7 +8,6 @@ use crate::interrupt::trap;
 /// Pushes the registers, call `trap_kernel()`.
 /// When `trap_kernel()` returns, pops the registers and returns.
 #[unsafe(naked)]
-#[repr(align(4))]
 pub extern "C" fn kernel_vec() {
     naked_asm!(
         // make room to save registers.

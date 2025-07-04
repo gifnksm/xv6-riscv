@@ -26,7 +26,7 @@ static PRINT: Print = Print {
 };
 
 impl Print {
-    fn lock(&self) -> Writer {
+    fn lock(&self) -> Writer<'_> {
         let guard = self
             .locking
             .load(Ordering::Relaxed)

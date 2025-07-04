@@ -33,7 +33,7 @@ impl<T> SleepLock<T> {
         }
     }
 
-    pub fn try_lock(&self) -> Result<SleepLockGuard<T>, TryLockError> {
+    pub fn try_lock(&self) -> Result<SleepLockGuard<'_, T>, TryLockError> {
         let mut locked = self.locked.try_lock()?;
         if locked.0 {
             return Err(TryLockError::Locked);
@@ -48,7 +48,7 @@ impl<T> SleepLock<T> {
     /// Acquires the lock.
     ///
     /// Sleeps (spins) until the lock is acquired.
-    pub fn force_wait_lock(&self) -> SleepLockGuard<T> {
+    pub fn force_wait_lock(&self) -> SleepLockGuard<'_, T> {
         let mut locked = self.locked.lock();
         while locked.0 {
             locked = self.unlocked.force_wait(locked);
@@ -62,7 +62,7 @@ impl<T> SleepLock<T> {
     /// Acquires the lock.
     ///
     /// Sleeps (spins) until the lock is acquired.
-    pub fn wait_lock(&self) -> Result<SleepLockGuard<T>, SleepLockError> {
+    pub fn wait_lock(&self) -> Result<SleepLockGuard<'_, T>, SleepLockError> {
         let mut locked = self.locked.lock();
         while locked.0 {
             match self.unlocked.wait(locked) {

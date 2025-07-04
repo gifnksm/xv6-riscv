@@ -275,7 +275,7 @@ pub fn create_delete() {
                     let path = OsStr::from_bytes(&name);
                     let file = File::create(path).unwrap();
                     drop(file);
-                    if i > 0 && (i % 2) == 0 {
+                    if i > 0 && i.is_multiple_of(2) {
                         name[1] = b'0' + u8::try_from(i / 2).unwrap();
                         let path = OsStr::from_bytes(&name);
                         fs::remove_file(path).unwrap();
@@ -423,7 +423,7 @@ pub fn concreate() {
         let path = OsStr::from_bytes(&file);
 
         let handle = process::fork().unwrap();
-        if ((i % 3) == 0 && handle.is_child()) || ((i % 3) == 1 && handle.is_parent()) {
+        if (i.is_multiple_of(3) && handle.is_child()) || ((i % 3) == 1 && handle.is_parent()) {
             let _ = File::open(path);
             let _ = File::open(path);
             let _ = File::open(path);

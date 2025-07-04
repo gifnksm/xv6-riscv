@@ -197,12 +197,12 @@ mod tests {
     use crate::command::CommandKind;
 
     #[track_caller]
-    fn parse(input: &str) -> Result<Vec<Command>, ParseError> {
+    fn parse(input: &str) -> Result<Vec<Command<'_>>, ParseError> {
         Parser::new(input).parse()
     }
 
     #[track_caller]
-    fn parse_ok<const N: usize>(input: &str) -> [Command; N] {
+    fn parse_ok<const N: usize>(input: &str) -> [Command<'_>; N] {
         parse(input).unwrap().try_into().unwrap()
     }
 

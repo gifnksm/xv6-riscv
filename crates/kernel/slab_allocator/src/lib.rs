@@ -33,7 +33,7 @@ impl<T> SlabAllocator<T> {
     pub unsafe fn new(range: Range<*mut T>) -> Self {
         const {
             assert!(size_of::<Run>() <= size_of::<T>());
-            assert!(align_of::<T>() % align_of::<Run>() == 0);
+            assert!(align_of::<T>().is_multiple_of(align_of::<Run>()));
         }
 
         assert_eq!(range.start.addr() % align_of::<T>(), 0);

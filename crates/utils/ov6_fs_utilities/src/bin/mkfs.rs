@@ -22,8 +22,8 @@ use ov6_types::os_str::OsStr;
 use safe_cast::{SafeFrom as _, to_u32, to_u64};
 
 const _: () = const {
-    assert!(FS_BLOCK_SIZE % size_of::<Inode>() == 0);
-    assert!(FS_BLOCK_SIZE % size_of::<DirEntry>() == 0);
+    assert!(FS_BLOCK_SIZE.is_multiple_of(size_of::<Inode>()));
+    assert!(FS_BLOCK_SIZE.is_multiple_of(size_of::<DirEntry>()));
 };
 
 fn main() -> io::Result<()> {

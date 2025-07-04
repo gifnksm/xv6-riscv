@@ -242,7 +242,7 @@ pub fn sbrk_bugs() {
 /// still `copyin()` from addresses in the last page?
 pub fn sbrk_last() {
     let top = process::current_break().addr();
-    if (top % PAGE_SIZE) != 0 {
+    if !top.is_multiple_of(PAGE_SIZE) {
         process::grow_break(PAGE_SIZE - (top % PAGE_SIZE)).unwrap();
     }
     process::grow_break(PAGE_SIZE).unwrap();

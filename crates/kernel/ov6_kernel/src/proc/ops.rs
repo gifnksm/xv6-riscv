@@ -327,11 +327,11 @@ pub fn wakeup(cond: &SpinLockCondVar) {
     let cond = ptr::from_ref(cond).addr();
     for p in &PROC {
         let mut shared = p.shared.lock();
-        if let ProcState::Sleeping { chan: ch } = shared.state {
-            if ch == cond {
-                shared.state = ProcState::Runnable;
-                wakeup += 1;
-            }
+        if let ProcState::Sleeping { chan: ch } = shared.state
+            && ch == cond
+        {
+            shared.state = ProcState::Runnable;
+            wakeup += 1;
         }
         drop(shared);
     }

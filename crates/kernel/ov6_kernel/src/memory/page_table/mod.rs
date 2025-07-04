@@ -562,22 +562,21 @@ impl DumpState {
     }
 
     fn append_or_dump(&mut self, level: usize, va: VirtAddr, pte: &PtEntry) {
-        if let Some(leaves) = &mut self.0 {
-            if leaves.level == level
-                && leaves.flags == pte.flags()
-                && leaves
-                    .end_va
-                    .byte_add(level_page_size(level))
-                    .is_ok_and(|end_va| end_va == va)
-                && leaves
-                    .end_pa
-                    .byte_add(level_page_size(level))
-                    .is_some_and(|end_pa| end_pa == pte.phys_addr())
-            {
-                leaves.end_va = va;
-                leaves.end_pa = pte.phys_addr();
-                return;
-            }
+        if let Some(leaves) = &mut self.0
+            && leaves.level == level
+            && leaves.flags == pte.flags()
+            && leaves
+                .end_va
+                .byte_add(level_page_size(level))
+                .is_ok_and(|end_va| end_va == va)
+            && leaves
+                .end_pa
+                .byte_add(level_page_size(level))
+                .is_some_and(|end_pa| end_pa == pte.phys_addr())
+        {
+            leaves.end_va = va;
+            leaves.end_pa = pte.phys_addr();
+            return;
         }
         self.dump();
         self.0 = Some(DumpLeaves {

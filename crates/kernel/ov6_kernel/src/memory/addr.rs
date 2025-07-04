@@ -19,7 +19,7 @@ const fn page_rounddown(addr: usize) -> usize {
 }
 
 const fn is_page_aligned(addr: usize) -> bool {
-    addr % PAGE_SIZE == 0
+    addr.is_multiple_of(PAGE_SIZE)
 }
 
 const fn level_page_roundup(addr: usize, level: usize) -> usize {
@@ -34,7 +34,7 @@ const fn level_page_rounddown(addr: usize, level: usize) -> usize {
 
 const fn is_level_page_aligned(addr: usize, level: usize) -> bool {
     let page_size = super::level_page_size(level);
-    addr % page_size == 0
+    addr.is_multiple_of(page_size)
 }
 
 pub trait PageRound {

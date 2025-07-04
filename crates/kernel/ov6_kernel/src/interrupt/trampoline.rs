@@ -40,7 +40,6 @@ pub extern "C" fn trampoline() {
 /// in supervisor mode, but with a
 /// user page table.
 #[unsafe(naked)]
-#[repr(align(4))]
 #[unsafe(link_section = "trampsec")]
 pub extern "C" fn user_vec() {
     naked_asm!(

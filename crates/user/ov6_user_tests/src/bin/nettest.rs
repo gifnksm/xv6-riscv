@@ -258,7 +258,7 @@ fn ping3() {
         let buf = [b'p', b' ', b'a'.wrapping_add(i), b'!'];
         let sent = sock1.send_to(&buf, dst).unwrap();
         assert_eq!(sent, buf.len());
-        if i % 2 == 0 {
+        if i.is_multiple_of(2) {
             let sent = sock1.send_to(&buf, dst).unwrap();
             assert_eq!(sent, buf.len());
         } else {

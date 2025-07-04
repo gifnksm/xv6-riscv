@@ -323,7 +323,7 @@ impl PageManager {
     /// # Panics
     ///
     /// Panics if the physical address is not within the heap range.
-    fn get_page(&self, pa: PhysAddr) -> Page {
+    fn get_page(&self, pa: PhysAddr) -> Page<'_> {
         let index = self.page_index(pa);
         let state = &self.states[index];
         Page {

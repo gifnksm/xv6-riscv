@@ -288,7 +288,7 @@ impl<const N: usize> Disk<N> {
     }
 
     fn send_request(&mut self, offset: usize, req: &Request, desc_idx: [u16; 3]) {
-        assert!(offset % BLK_SECTOR_SIZE == 0);
+        assert!(offset.is_multiple_of(BLK_SECTOR_SIZE));
         let sector = (offset / BLK_SECTOR_SIZE) as u64;
         assert_eq!(req.len(), FS_BLOCK_SIZE);
 

@@ -197,7 +197,7 @@ fn request_user_write(private: &mut ProcPrivateData, addr: usize) -> Result<(), 
 }
 
 fn fetch_usize(addr: usize, pt: &UserPageTable) -> Option<usize> {
-    if addr % 8 != 0 {
+    if !addr.is_multiple_of(8) {
         return None;
     }
     let va = VirtAddr::new(addr).ok()?;

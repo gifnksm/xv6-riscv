@@ -86,10 +86,10 @@ struct TestFilter {
 
 impl TestFilter {
     fn matches(&self, entry: &TestEntry) -> bool {
-        if let Some(filter_name) = &self.name {
-            if !self.name_match_type.matches(entry.name, filter_name) {
-                return false;
-            }
+        if let Some(filter_name) = &self.name
+            && !self.name_match_type.matches(entry.name, filter_name)
+        {
+            return false;
         }
 
         if !self.tags.is_empty() && !self.tags.iter().any(|t| entry.tags.contains(&t.as_str())) {

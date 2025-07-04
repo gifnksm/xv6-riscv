@@ -42,10 +42,10 @@ pub fn unlink(tx: &Tx<false>, cwd: TxInode<false>, path: &Path) -> Result<(), Ke
     let mut file_lip = file_ip.force_wait_lock();
 
     assert!(file_lip.data().nlink > 0);
-    if let Some(mut file_dp) = file_lip.as_dir() {
-        if !file_dp.is_empty() {
-            return Err(KernelError::DirectoryNotEmpty);
-        }
+    if let Some(mut file_dp) = file_lip.as_dir()
+        && !file_dp.is_empty()
+    {
+        return Err(KernelError::DirectoryNotEmpty);
     }
 
     let de = repr::DirEntry::zeroed();
